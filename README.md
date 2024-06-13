@@ -2,7 +2,7 @@
 
 This is an opinionated plugin to authenticate to the elastic-observability Google Cloud project from Buildkite using [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation).
 
-## Configuration
+## Properties
 
 | Name       | Description                                                                                           | Required | Default |
 |------------|-------------------------------------------------------------------------------------------------------|----------|---------|
