@@ -6,7 +6,7 @@ This is an opinionated plugin to authenticate to the elastic-observability Googl
 
 | Name       | Description                                                                                           | Required | Default |
 |------------|-------------------------------------------------------------------------------------------------------|----------|---------|
-| `lifetime` | The time (in seconds) the OIDC token will be valid for before expiry. Must be a non-negative integer. | `true`   | `1800`  |
+| `lifetime` | The time (in seconds) the OIDC token will be valid for before expiry. Must be a non-negative integer. | `false`  | `1800`  |
 
 ## Usage
 
