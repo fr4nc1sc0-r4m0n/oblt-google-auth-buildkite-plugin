@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Create a temporary directory with both BSD and GNU mktemp
+TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'buildkiteXXXX')
+
+echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
+
+HASH=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }' | sha256sum | cut -c1-27)
+PROJECT_NUMBER="8560181848"
+WORKLOAD_IDENTITY_POOL_ID="buildkite"
+WORKLOAD_IDENTITY_PROVIDER_ID="repo-${HASH}"
+AUDIENCE="//iam.googleapis.com/projects/${PROJECT_NUMBER}/locations/global/workloadIdentityPools/${WORKLOAD_IDENTITY_POOL_ID}/providers/${WORKLOAD_IDENTITY_PROVIDER_ID}"
+buildkite-agent oidc request-token --audience "$AUDIENCE" --lifetime "${BUILDKITE_PLUGIN_OBLT_GOOGLE_AUTH_LIFETIME:-1800}" > "$TMPDIR"/token.json
+echo "Workload Identity Provider ID: ${WORKLOAD_IDENTITY_PROVIDER_ID}"
+
+echo "~~~ :gcloud: Configuring Google Cloud credentials"
+
+cat << JSON > "$TMPDIR"/credentials.json
+{
+  "type": "external_account",
+  "audience": "$AUDIENCE",
+  "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+  "token_url": "https://sts.googleapis.com/v1/token",
+  "credential_source": {
+    "file": "$TMPDIR/token.json"
+  }
+}
+JSON
+
+export BUILDKITE_OIDC_TMPDIR=$TMPDIR
+export GOOGLE_APPLICATION_CREDENTIALS=$TMPDIR/credentials.json
+export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE=$GOOGLE_APPLICATION_CREDENTIALS
