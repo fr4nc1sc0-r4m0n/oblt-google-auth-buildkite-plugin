@@ -8,11 +8,12 @@ hash has a length of 28 characters.
 
 ## Properties
 
-| Name             | Description                                                                                           | Required | Default                 |
-|------------------|-------------------------------------------------------------------------------------------------------|----------|-------------------------|
-| `lifetime`       | The time (in seconds) the OIDC token will be valid for before expiry. Must be a non-negative integer. | `false`  | `1800`                  |
-| `project-id`     | The GCP project id.                                                                                   | `false`  | `elastic-observability` |
-| `project-number` | The GCP project number.                                                                               | `false`  | `8560181848`            |
+| Name                  | Description                                                                                           | Required | Default                 |
+|-----------------------|-------------------------------------------------------------------------------------------------------|----------|-------------------------|
+| `lifetime`            | The time (in seconds) the OIDC token will be valid for before expiry. Must be a non-negative integer. | `false`  | `1800`                  |
+| `project-id`          | The GCP project id.                                                                                   | `false`  | `elastic-observability` |
+| `project-number`      | The GCP project number.                                                                               | `false`  | `8560181848`            |
+| `use-service-account` | Flag to generate and use a temporarly service account credentials                                     | `false`  | false                   |
 
 ## Usage
 
@@ -26,4 +27,5 @@ steps:
           lifetime: 1800 # seconds
           # project-id: "elastic-observability"
           # project-number: "8560181848"
+          # use-service-account: false
 ```

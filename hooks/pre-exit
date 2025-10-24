@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+if [[ -n ${GOOGLE_APPLICATION_SERVICE_ACCOUNT:-} ]]; then
+  echo "~~~ :gcloud: Cleaning up Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT}"
+  curl -X DELETE \
+     -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+     "https://iam.googleapis.com/v1/projects/$GOOGLE_CLOUD_PROJECT/serviceAccounts/$GOOGLE_APPLICATION_SERVICE_ACCOUNT"
+fi
+
 if [[ -v BUILDKITE_OIDC_TMPDIR ]]; then
   rm -rf "$BUILDKITE_OIDC_TMPDIR"
 

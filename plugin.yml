@@ -13,4 +13,6 @@ configuration:
       type: string
     project-number:
       type: number
+    use-service-account:
+      type: boolean
   additionalProperties: false
