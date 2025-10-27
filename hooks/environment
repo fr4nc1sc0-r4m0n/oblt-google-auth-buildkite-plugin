@@ -57,6 +57,9 @@ export GOOGLE_CLOUD_PROJECT="${PROJECT_ID}"
 if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   echo "~~~ :gcloud: Generating temporary Service Account credentials"
   SA_NAME="bk-plugin-sa-${HASH}"
+  SA_ACCOUNT="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+  # Redact the token file contents
+  echo "$(cat $TOKEN_FILE)" | buildkite-agent redactor add
 
   # Create the service account
   cat << JSON > "$REQUEST_FILE"
@@ -83,7 +86,7 @@ JSON
       {
         "role": "roles/writer",
         "members": [
-          "$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+          "$SA_ACCOUNT"
         ]
       }
     ]
@@ -101,11 +104,11 @@ JSON
   curl -X POST \
      -H "Authorization: Bearer $(cat $TOKEN_FILE)" \
      -H "Content-Type: application/json; charset=utf-8" \
-     "https://iam.googleapis.com/v1/projects/$PROJECT_ID/serviceAccounts/$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com/keys" > "$SA_KEY_FILE"
+     "https://iam.googleapis.com/v1/projects/$PROJECT_ID/serviceAccounts/$SA_ACCOUNT/keys" > "$SA_KEY_FILE"
 
-  echo "~~~ :gcloud: Using Service Account credentials for $SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+  echo "~~~ :gcloud: Using Service Account credentials for $SA_ACCOUNT"
 
   export GOOGLE_APPLICATION_CREDENTIALS="$SA_KEY_FILE"
-  export GOOGLE_APPLICATION_SERVICE_ACCOUNT="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+  export GOOGLE_APPLICATION_SERVICE_ACCOUNT="$SA_ACCOUNT"
   export CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE="${GOOGLE_APPLICATION_CREDENTIALS}"
 fi
