@@ -10,6 +10,8 @@ REQUEST_FILE="$TMPDIR"/request.json
 TOKEN_FILE="$TMPDIR"/token.json
 SA_KEY_FILE="$TMPDIR"/sa-key.json
 
+CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 echo "~~~ :buildkite: Requesting OIDC token from Buildkite"
 
 HASH=$(echo "${BUILDKITE_REPO}" | awk -F'[:.]' '{ printf $3 }' | sha256sum | cut -c1-27)
@@ -61,50 +63,16 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   # Redact the token file contents
   echo "$(cat $TOKEN_FILE)" | buildkite-agent redactor add
 
-  # Create the service account
-  cat << JSON > "$REQUEST_FILE"
-{
-  "accountId": "$SA_NAME",
-  "serviceAccount": {
-    "description": "Automated service account created by Buildkite GCP Auth Plugin with the hash ${HASH}",
-    "displayName": "Buildkite Plugin Service Account ${HASH}"
-  }
-}
-JSON
+  . "$CWD/../libs/gcloud"
 
-  curl -X POST \
-     -H "Authorization: Bearer $(cat $TOKEN_FILE)" \
-     -H "Content-Type: application/json; charset=utf-8" \
-     -d @$REQUEST_FILE \
-     "https://iam.googleapis.com/v1/projects/$PROJECT_ID/serviceAccounts"
+  # Create the service account
+  create_service_account "$SA_NAME" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE"
 
   # Set the IAM policy to the service account
-  cat << JSON > "$REQUEST_FILE"
-{
-  "policy": {
-    "bindings": [
-      {
-        "role": "roles/writer",
-        "members": [
-          "$SA_ACCOUNT"
-        ]
-      }
-    ]
-  }
-}
-JSON
-
-  curl -X POST \
-     -H "Authorization: Bearer $(cat $TOKEN_FILE)" \
-     -H "Content-Type: application/json; charset=utf-8" \
-     -d @$REQUEST_FILE \
-     "https://cloudresourcemanager.googleapis.com/v1/projects/$PROJECT_ID:setIamPolicy"
+  set_iam_policy "$SA_ACCOUNT" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE"
 
   # Create and download the service account key
-  curl -X POST \
-     -H "Authorization: Bearer $(cat $TOKEN_FILE)" \
-     -H "Content-Type: application/json; charset=utf-8" \
-     "https://iam.googleapis.com/v1/projects/$PROJECT_ID/serviceAccounts/$SA_ACCOUNT/keys" > "$SA_KEY_FILE"
+  create_service_account_key "$SA_ACCOUNT" "$TOKEN_FILE" "$PROJECT_ID" "$SA_KEY_FILE"
 
   echo "~~~ :gcloud: Using Service Account credentials for $SA_ACCOUNT"
 

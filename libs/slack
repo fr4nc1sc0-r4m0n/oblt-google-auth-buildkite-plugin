@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+function send_message() {
+  cat <<- YAML | buildkite-agent pipeline upload
+steps:
+  - label: "Notify slack"
+    command: echo "Notifying slack"
+    notify:
+      - slack:
+          channels:
+            - "#observablt-bots"
+          message: >
+            ":fire: Google Auth Buildkite Plugin cleanup process failed: <$BUILDKITE_BUILD_URL|Execution logs>! 
+            Check current service accounts executing `gcloud iam service-accounts list --project=elastic-observability-ci --filter=Email:bk-plugin-sa`. 
+            Remove manually! :fire:"
+YAML
+}
