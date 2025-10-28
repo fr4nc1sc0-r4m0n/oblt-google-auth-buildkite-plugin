@@ -15,8 +15,8 @@ if [[ -n ${GOOGLE_APPLICATION_SERVICE_ACCOUNT:-} ]]; then
   
   if [[ -n ${error:-} ]]; then
     echo "!!! :gcloud: Failed to delete Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT}"
-    
-    # Send Slack notification about the failure
+
+    # Send Slack notification and set a Buildkite annotation about the failure
 
     # shellcheck disable=SC1091
     . "$CWD/../libs/slack"
@@ -26,6 +26,9 @@ if [[ -n ${GOOGLE_APPLICATION_SERVICE_ACCOUNT:-} ]]; then
 Check current service accounts executing \`gcloud iam service-accounts list --project=elastic-observability-ci --filter=Email:bk-plugin-sa\`. 
 Remove manually! :fire:
 EOM
+
+    buildkite-agent annotate "$MESSAGE" --style "warning" --context "gcloud-auth-service-account-cleanup-failure"
+
     send_message $SLACK_CHANNEL "$MESSAGE"
   else
     echo "~~~ :gcloud: Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT} cleaned up"

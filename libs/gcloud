@@ -16,19 +16,21 @@ LABEL_EPHEMERAL="true"
 #   $2: Token file path
 #   $3: Project ID
 #   $4: Request file path
-#   $5: Hash
+#   $5: Repository name
+#   $6: Hash
 function create_service_account() {
   local -r SA_NAME="$1"
   local -r TOKEN_FILE="$2"
   local -r PROJECT_ID="$3"
   local -r REQUEST_FILE="$4"
-  local -r HASH="$5"
+  local -r REPOSITORY_NAME="$5"
+  local -r HASH="$6"
   cat << JSON > "$REQUEST_FILE"
 {
   "accountId": "$SA_NAME",
   "serviceAccount": {
     "description": "Automated service account created by Buildkite GCP Auth Plugin with the hash ${HASH}.\n Labels:\n org=${LABEL_ORG}\n division=${LABEL_DIVISION}\n team=${LABEL_TEAM}\n project=${LABEL_PROJECT}\n ephemeral=${LABEL_EPHEMERAL}",
-    "displayName": "Buildkite Plugin Service Account ${HASH}"
+    "displayName": "Buildkite Plugin Ephemeral ${REPOSITORY_NAME} Service Account ${HASH}"
   }
 }
 JSON
