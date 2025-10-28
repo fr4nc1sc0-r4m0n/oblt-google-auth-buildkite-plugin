@@ -58,8 +58,15 @@ export GOOGLE_CLOUD_PROJECT="${PROJECT_ID}"
 # Login by Service Account
 if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   echo "~~~ :gcloud: Generating temporary Service Account credentials"
-  SA_NAME="ephemeral-${BUILDKITE_REPO}-bk-plugin-sa-${BUILDKITE_JOB_ID}"
+
+  # Get the name of the repository
+  REPO_BASENAME=$(basename ${BUILDKITE_REPO})
+  REPO_NAME=${REPO_BASENAME%.*}
+
+  # Set some variables
+  SA_NAME="ephemeral-${REPO_NAME}-bk-plugin-sa-${BUILDKITE_JOB_ID}"
   SA_ACCOUNT="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
+
   # Redact the token file contents
   echo "$(cat $TOKEN_FILE)" | buildkite-agent redactor add
 
@@ -67,7 +74,7 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   . "$CWD/../libs/gcloud"
 
   # Create the service account
-  create_service_account "$SA_NAME" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE" "$BUILDKITE_REPO" "$BUILDKITE_JOB_ID"
+  create_service_account "$SA_NAME" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE" "$REPO_NAME" "$BUILDKITE_JOB_ID"
 
   # Set the IAM policy to the service account
   set_iam_policy "$SA_ACCOUNT" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE"
