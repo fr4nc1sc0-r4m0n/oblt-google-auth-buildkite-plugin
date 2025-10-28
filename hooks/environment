@@ -63,6 +63,7 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   # Redact the token file contents
   echo "$(cat $TOKEN_FILE)" | buildkite-agent redactor add
 
+  # shellcheck disable=SC1091
   . "$CWD/../libs/gcloud"
 
   # Create the service account
