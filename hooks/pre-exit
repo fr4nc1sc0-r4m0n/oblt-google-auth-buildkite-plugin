@@ -3,6 +3,7 @@
 set +eu
 
 CWD="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SLACK_CHANNEL="${BUILDKITE_PLUGIN_OBLT_GOOGLE_AUTH_SLACK_CHANNEL:-"#observablt-bots"}"
 
 if [[ -n ${GOOGLE_APPLICATION_SERVICE_ACCOUNT:-} ]]; then
   echo "~~~ :gcloud: Cleaning up Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT}"
@@ -14,7 +15,12 @@ if [[ -n ${GOOGLE_APPLICATION_SERVICE_ACCOUNT:-} ]]; then
     echo "!!! :gcloud: Failed to delete Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT}"
     # Send Slack notification about the failure
     . "$CWD/../libs/slack"
-    send_message
+    read -r -d '' MESSAGE << EOM
+:fire: Google Auth Buildkite Plugin cleanup process failed: <$BUILDKITE_BUILD_URL|Execution logs>! 
+Check current service accounts executing \`gcloud iam service-accounts list --project=elastic-observability-ci --filter=Email:bk-plugin-sa\`. 
+Remove manually! :fire:
+EOM
+    send_message $SLACK_CHANNEL "$MESSAGE"
   else
     echo "~~~ :gcloud: Service Account ${GOOGLE_APPLICATION_SERVICE_ACCOUNT} cleaned up"
   fi

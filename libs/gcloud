@@ -4,6 +4,12 @@ set -euo pipefail
 
 # Functions for Google Cloud Service Account management
 
+LABEL_ORG="obs"
+LABEL_DIVISION="engineering"
+LABEL_TEAM="eng-productivity"
+LABEL_PROJECT=${BUILDKITE_REPO}
+LABEL_EPHEMERAL="true"
+
 # Create the service account
 # Arguments:
 #   $1: Service account name
@@ -21,7 +27,7 @@ function create_service_account() {
 {
   "accountId": "$SA_NAME",
   "serviceAccount": {
-    "description": "Automated service account created by Buildkite GCP Auth Plugin with the hash ${HASH}",
+    "description": "Automated service account created by Buildkite GCP Auth Plugin with the hash ${HASH}.\n Labels:\n org=${LABEL_ORG}\n division=${LABEL_DIVISION}\n team=${LABEL_TEAM}\n project=${LABEL_PROJECT}\n ephemeral=${LABEL_EPHEMERAL}",
     "displayName": "Buildkite Plugin Service Account ${HASH}"
   }
 }
