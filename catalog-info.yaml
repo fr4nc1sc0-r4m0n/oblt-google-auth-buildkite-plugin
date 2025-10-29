@@ -24,10 +24,6 @@ spec:
     spec:
       repository: elastic/oblt-google-auth-buildkite-plugin
       pipeline_file: ".buildkite/pipeline.yml"
-      provider_settings:
-        build_branches: true
-        build_pull_request_forks: true
-        trigger_mode: code
       teams:
         observablt-robots: {}
         everyone:
