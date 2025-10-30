@@ -13,6 +13,7 @@ steps:
   - label: ":gcp: Google Cloud Auth OIDC Test"
     agents:
       provider: gcp
+      image: family/core-ubuntu-2204
     plugins:
       - elastic/oblt-google-auth#${BUILDKITE_COMMIT}:
           lifetime: 10800 # seconds
@@ -28,6 +29,7 @@ steps:
   - label: ":gcp: Google Cloud Auth Service Account Test"
     agents:
       provider: gcp
+      image: family/core-ubuntu-2204
     plugins:
       - elastic/oblt-google-auth#${BUILDKITE_COMMIT}:
           lifetime: 10800 # seconds
