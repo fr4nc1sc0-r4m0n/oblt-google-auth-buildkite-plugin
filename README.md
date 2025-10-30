@@ -31,3 +31,11 @@ steps:
           # use-service-account: false
           # slack-channel: "#observablt-bots"
 ```
+
+## Caveats
+
+This plugin needs the following requirements:
+
+- bash
+- buildkite-agent
+- gcloud

@@ -6,7 +6,6 @@ set -euo pipefail
 TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'buildkiteXXXX')
 
 CREDENTIALS_FILE="$TMPDIR"/credentials.json
-REQUEST_FILE="$TMPDIR"/request.json
 TOKEN_FILE="$TMPDIR"/token.json
 SA_KEY_FILE="$TMPDIR"/sa-key.json
 
@@ -67,20 +66,17 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   SA_NAME="ephemeral-${REPO_NAME}-bk-plugin-sa-${BUILDKITE_JOB_ID}"
   SA_ACCOUNT="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
 
-  # Redact the token file contents
-  echo "$(cat $TOKEN_FILE)" | buildkite-agent redactor add
-
   # shellcheck disable=SC1091
   . "$CWD/../libs/gcloud"
 
   # Create the service account
-  create_service_account "$SA_NAME" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE" "$REPO_NAME" "$BUILDKITE_JOB_ID"
+  create_service_account "$SA_NAME" "$PROJECT_ID" "$REPO_NAME" "$BUILDKITE_JOB_ID"
 
   # Set the IAM policy to the service account
-  set_iam_policy "$SA_ACCOUNT" "$TOKEN_FILE" "$PROJECT_ID" "$REQUEST_FILE"
+  set_iam_policy "$SA_ACCOUNT" "$PROJECT_ID" 
 
   # Create and download the service account key
-  create_service_account_key "$SA_ACCOUNT" "$TOKEN_FILE" "$PROJECT_ID" "$SA_KEY_FILE"
+  create_service_account_key "$SA_ACCOUNT" "$PROJECT_ID" "$SA_KEY_FILE"
 
   echo "~~~ :gcloud: Using Service Account credentials for $SA_ACCOUNT"
 

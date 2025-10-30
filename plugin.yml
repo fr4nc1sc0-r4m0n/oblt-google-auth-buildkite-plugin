@@ -5,6 +5,7 @@ public: true
 requirements:
   - bash
   - buildkite-agent
+  - gcloud
 configuration:
   properties:
     lifetime:
