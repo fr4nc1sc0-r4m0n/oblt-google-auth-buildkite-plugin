@@ -30,10 +30,10 @@ steps:
       provider: gcp
     plugins:
       - elastic/oblt-google-auth#${BUILDKITE_COMMIT}:
-        lifetime: 10800 # seconds
-        project-id: "elastic-observability-ci"
-        project-number: "911195782929"
-        use-service-account: true
+          lifetime: 10800 # seconds
+          project-id: "elastic-observability-ci"
+          project-number: "911195782929"
+          use-service-account: true
     command: |
       #!/usr/bin/env bash
       set +eu
