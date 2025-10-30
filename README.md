@@ -32,7 +32,7 @@ steps:
           # slack-channel: "#observablt-bots"
 ```
 
-## Caveats
+## Requirements
 
 This plugin needs the following requirements:
 
