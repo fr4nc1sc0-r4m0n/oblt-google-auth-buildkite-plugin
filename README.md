@@ -42,5 +42,5 @@ This plugin needs the following requirements:
 
 >>>
 > [!IMPORTANT]
-> Only `gcloud` dependency is required if `use-service-account` flag is set to `true`
+> `gcloud` dependency is required only if `use-service-account` flag is set to `true`
 >>>
