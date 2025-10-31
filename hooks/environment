@@ -69,6 +69,9 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   # shellcheck disable=SC1091
   . "$CWD/../libs/gcloud"
 
+  # Check if gcloud is installed
+  check_if_gcloud_installed
+
   # Create the service account
   create_service_account "$SA_NAME" "$PROJECT_ID" "$REPO_NAME" "$BUILDKITE_JOB_ID"
 

@@ -39,3 +39,6 @@ This plugin needs the following requirements:
 - bash
 - buildkite-agent
 - gcloud
+
+> [!IMPORTANT]
+> This plugin can be used in an agent that does **NOT** have the `gcloud` dependency installed if the `use-service-account` flag is not set to `true`.
