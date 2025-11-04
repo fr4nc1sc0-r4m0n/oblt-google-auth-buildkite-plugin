@@ -33,6 +33,8 @@ function create_service_account() {
   local -r REPOSITORY_NAME="$3"
   local -r HASH="$4"
 
+  gcloud auth list --filter=status:ACTIVE --format="value(account)"
+
   gcloud iam service-accounts create "$SA_NAME" \
     --description="Service account created by Buildkite GCP Auth Plugin for ${REPOSITORY_NAME}.\n Labels:\n org=${LABEL_ORG}\n division=${LABEL_DIVISION}\n team=${LABEL_TEAM}\n project=${REPOSITORY_NAME}\n ephemeral=${LABEL_EPHEMERAL}" \
     --display-name="Buildkite Plugin Ephemeral Service Account ${HASH}" \
@@ -47,6 +49,8 @@ function create_service_account() {
 function set_iam_policy() {
   local -r SA_ACCOUNT="$1"
   local -r PROJECT_ID="$2"
+
+  gcloud auth list --filter=status:ACTIVE --format="value(account)"
 
   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SA_ACCOUNT" \
