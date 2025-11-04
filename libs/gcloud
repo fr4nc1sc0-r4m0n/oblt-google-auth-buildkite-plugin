@@ -47,7 +47,6 @@ function create_service_account() {
 function set_iam_policy() {
   local -r SA_ACCOUNT="$1"
   local -r PROJECT_ID="$2"
-  local -r REQUEST_FILE="$3"
 
   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SA_ACCOUNT" \
