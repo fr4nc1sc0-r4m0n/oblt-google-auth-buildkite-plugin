@@ -50,7 +50,7 @@ function set_iam_policy() {
 
   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SA_ACCOUNT" \
-  --role="roles/writer"
+  --role="roles/editor"
 
 }
 
