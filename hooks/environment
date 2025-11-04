@@ -63,7 +63,7 @@ if [ "$USE_SERVICE_ACCOUNT" = true ]; then
   REPO_NAME=${REPO_BASENAME%.*}
 
   # Set some variables
-  SA_NAME="ephemeral-${REPO_NAME}-bk-plugin-sa-${BUILDKITE_JOB_ID}"
+  SA_NAME="bk-$(echo ${BUILDKITE_JOB_ID} | sha256sum | cut -c1-27)"
   SA_ACCOUNT="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
 
   # shellcheck disable=SC1091
