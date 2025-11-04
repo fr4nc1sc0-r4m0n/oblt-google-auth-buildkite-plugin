@@ -40,7 +40,5 @@ This plugin needs the following requirements:
 - buildkite-agent
 - gcloud  *(Optional)*
 
->>>
 > [!IMPORTANT]
 > `gcloud` dependency is required only if `use-service-account` flag is set to `true`
->>>
