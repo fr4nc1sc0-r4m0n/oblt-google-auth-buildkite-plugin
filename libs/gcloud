@@ -34,8 +34,8 @@ function create_service_account() {
   local -r HASH="$4"
 
   gcloud iam service-accounts create "$SA_NAME" \
-    --description="Automated service account created by Buildkite GCP Auth Plugin with the hash ${HASH}.\n Labels:\n org=${LABEL_ORG}\n division=${LABEL_DIVISION}\n team=${LABEL_TEAM}\n project=${REPOSITORY_NAME}\n ephemeral=${LABEL_EPHEMERAL}" \
-    --display-name="Buildkite Plugin Ephemeral ${REPOSITORY_NAME} Service Account ${HASH}" \
+    --description="Automated service account created by Buildkite GCP Auth Plugin for ${REPOSITORY_NAME} with the hash ${HASH}.\n Labels:\n org=${LABEL_ORG}\n division=${LABEL_DIVISION}\n team=${LABEL_TEAM}\n project=${REPOSITORY_NAME}\n ephemeral=${LABEL_EPHEMERAL}" \
+    --display-name="Buildkite Plugin Ephemeral Service Account ${HASH}" \
     --project="$PROJECT_ID"
 
 }
