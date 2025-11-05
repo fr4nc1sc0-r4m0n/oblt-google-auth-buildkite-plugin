@@ -38,6 +38,8 @@ function create_service_account() {
     --display-name="Buildkite Plugin Ephemeral Service Account ${HASH}" \
     --project="$PROJECT_ID"
 
+  sleep 60 # Wait for eventual consistency
+
 }
 
 # Create and download the service account key
@@ -54,7 +56,6 @@ function create_service_account_key() {
     --iam-account="$SA_ACCOUNT" \
     --project="$PROJECT_ID"
 
-  sleep 60 # Wait for eventual consistency
 }
 
 # Delete the service account
