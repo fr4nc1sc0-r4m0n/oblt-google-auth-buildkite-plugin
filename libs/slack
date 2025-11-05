@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Function to send a Slack message
+# Arguments:
+#   $1: Slack channel
+#   $2: Message
 function send_message() {
   local -r SLACK_CHANNEL="$1"
   local -r MESSAGE="$2"

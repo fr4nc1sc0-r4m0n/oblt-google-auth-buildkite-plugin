@@ -53,6 +53,8 @@ function create_service_account_key() {
   gcloud iam service-accounts keys create "$SA_KEY_FILE" \
     --iam-account="$SA_ACCOUNT" \
     --project="$PROJECT_ID"
+
+  sleep 60 # Wait for eventual consistency
 }
 
 # Delete the service account
@@ -79,7 +81,6 @@ function set_iam_policy() {
   gcloud projects add-iam-policy-binding "$PROJECT_ID" \
   --member="serviceAccount:$SA_ACCOUNT" \
   --role="roles/editor" \
-  --condition=None \
-  --quiet
+  --condition=None
 
 }
