@@ -40,21 +40,6 @@ function create_service_account() {
 
 }
 
-# Set the IAM policy to the service account
-# Arguments:
-#   $1: Service account email
-#   $2: Project ID
-function set_iam_policy() {
-  local -r SA_ACCOUNT="$1"
-  local -r PROJECT_ID="$2"
-
-  gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-  --member="serviceAccount:$SA_ACCOUNT" \
-  --role="roles/editor" \
-  --condition=None
-
-}
-
 # Create and download the service account key
 # Arguments:
 #   $1: Service account email
@@ -68,4 +53,32 @@ function create_service_account_key() {
   gcloud iam service-accounts keys create "$SA_KEY_FILE" \
     --iam-account="$SA_ACCOUNT" \
     --project="$PROJECT_ID"
+}
+
+# Delete the service account
+# Arguments:
+#   $1: Service account name
+#   $2: Project ID
+function delete_service_account() {
+  local -r SA_ACCOUNT="$1"
+  local -r PROJECT_ID="$2"
+
+  gcloud iam service-accounts delete "$SA_ACCOUNT" \
+    --project="$PROJECT_ID" \
+    --quiet
+}
+
+# Set the IAM policy to the service account
+# Arguments:
+#   $1: Service account email
+#   $2: Project ID
+function set_iam_policy() {
+  local -r SA_ACCOUNT="$1"
+  local -r PROJECT_ID="$2"
+
+  gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+  --member="serviceAccount:$SA_ACCOUNT" \
+  --role="roles/editor" \
+  --condition=None
+
 }
